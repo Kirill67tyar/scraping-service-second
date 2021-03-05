@@ -63,11 +63,11 @@ def get_url(_settings):
 # но перед этим необходимо пометить, что наша функция и потавить ключевое слово async перед
 # определением фукции.
 # executor - исполнитель (implementer, performer)
-async def main(value):
-    func, url, city, language = value
-    job, err = await loop.run_in_executor(None, func, url, city, language)
-    jobs.extend(job)
-    errors.extend(err)
+# async def main(value):
+#     func, url, city, language = value
+#     job, err = await loop.run_in_executor(None, func, url, city, language)
+#     jobs.extend(job)
+#     errors.extend(err)
 
 
 
@@ -100,14 +100,17 @@ url_list = get_url(_settings)
 for i in range(10):
     for data in url_list:
         for func, key in parsers:
-            url = data['url_data'].get(key, None)
-            if url:
-                # вот эта строчка - блокирующий вызов. Самый узкий проход нашего кода, бутылочное горлышко
-                # весь код не может быть выполнен, пока не пройдут эти функции
-                # поэтому мы здесь и используем асинхронный подход
-                j, e = func(url, city=data['city'], language=data['language'])
-                jobs.extend(j)
-                errors.extend(e)
+            if not isinstance(data['url_data'], str):
+                url = data['url_data'].get(key, None)
+                if url:
+                    # вот эта строчка - блокирующий вызов. Самый узкий проход нашего кода, бутылочное горлышко
+                    # весь код не может быть выполнен, пока не пройдут эти функции
+                    # поэтому мы здесь и используем асинхронный подход
+                    j, e = func(url, city=data['city'], language=data['language'])
+                    jobs.extend(j)
+                    errors.extend(e)
+            else:
+                print(data['url_data'])
 # =====================================================================    Неасинхронный способ выполнения
 
 # print((time.time() - start) / 10)

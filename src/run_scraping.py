@@ -81,34 +81,34 @@ url_list = get_url(_settings)
 # import time
 # start = time.time()
 
-# ---------------------------------------------------------------------    Асинхронный способ выполнения
-# for i in range(10):
-loop = asyncio.get_event_loop() #  сздаем loop для асинхронного программирования
-tmp_tasks = [(func, data['url_data'].get(key, None), data['city'], data['language'])
-                 for data in url_list
-                 for func, key in parsers]
-
-## когда wait вызывается - он регулирует переключение интерпритатора, для той  или иной таски
-tasks = asyncio.wait([loop.create_task(main(f)) for f in tmp_tasks])
-loop.run_until_complete(tasks)
-loop.close()
-# ---------------------------------------------------------------------    Асинхронный способ выполнения
+# # ---------------------------------------------------------------------    Асинхронный способ выполнения
+# # for i in range(10):
+# loop = asyncio.get_event_loop() #  сздаем loop для асинхронного программирования
+# tmp_tasks = [(func, data['url_data'].get(key, None), data['city'], data['language'])
+#                  for data in url_list
+#                  for func, key in parsers]
+#
+# ## когда wait вызывается - он регулирует переключение интерпритатора, для той  или иной таски
+# tasks = asyncio.wait([loop.create_task(main(f)) for f in tmp_tasks])
+# loop.run_until_complete(tasks)
+# loop.close()
+# # ---------------------------------------------------------------------    Асинхронный способ выполнения
 
             #                   OR
 
-# # =====================================================================    Неасинхронный способ выполнения
-# for i in range(10):
-#     for data in url_list:
-#         for func, key in parsers:
-#             url = data['url_data'].get(key, None)
-#             if url:
-#                 # вот эта строчка - блокирующий вызов. Самый узкий проход нашего кода, бутылочное горлышко
-#                 # весь код не может быть выполнен, пока не пройдут эти функции
-#                 # поэтому мы здесь и используем асинхронный подход
-#                 j, e = func(url, city=data['city'], language=data['language'])
-#                 jobs.extend(j)
-#                 errors.extend(e)
-# # =====================================================================    Неасинхронный способ выполнения
+# =====================================================================    Неасинхронный способ выполнения
+for i in range(10):
+    for data in url_list:
+        for func, key in parsers:
+            url = data['url_data'].get(key, None)
+            if url:
+                # вот эта строчка - блокирующий вызов. Самый узкий проход нашего кода, бутылочное горлышко
+                # весь код не может быть выполнен, пока не пройдут эти функции
+                # поэтому мы здесь и используем асинхронный подход
+                j, e = func(url, city=data['city'], language=data['language'])
+                jobs.extend(j)
+                errors.extend(e)
+# =====================================================================    Неасинхронный способ выполнения
 
 # print((time.time() - start) / 10)
 # print(*jobs,len(jobs), sep='\n')

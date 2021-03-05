@@ -95,7 +95,9 @@ url_list = get_url(_settings)
 # # ---------------------------------------------------------------------    Асинхронный способ выполнения
 
             #                   OR
-
+"""
+python run_scraping.py
+"""
 # =====================================================================    Неасинхронный способ выполнения
 for i in range(10):
     for data in url_list:
@@ -110,7 +112,7 @@ for i in range(10):
                     jobs.extend(j)
                     errors.extend(e)
             else:
-                print(data['url_data'])
+                print(data['url_data'], type(data['url_data']))
 # =====================================================================    Неасинхронный способ выполнения
 
 # print((time.time() - start) / 10)

@@ -160,14 +160,22 @@ if errors:
         err.save()
         # --------------------------------------------
 
-        # 2 ============================================
-        # for local server (db SQLite):
-        err.data['errors'].extend(errors)
-        err.save()
-        #  ============================================
+        # # 2 ============================================
+        # # for local server (db SQLite):
+        # err.data['errors'].extend(errors)
+        # err.save()
+        # #  ============================================
 
     else:
-        err = Error(data={'errors': errors, 'feedback': [],}).save()
+        # 1 -----------------------------------------
+        # for production server (db PostgreSQL)
+        err = Error(data=json.dumps({'errors': errors, 'feedback': [],})).save()
+        # --------------------------------------------
+
+        # # 2 ============================================
+        # # for local server (db SQLite):
+        # err = Error(data={'errors': errors, 'feedback': [],}).save()
+        # #  ============================================
 
 
 # ------------------------------------------------------------------

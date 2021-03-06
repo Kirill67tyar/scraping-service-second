@@ -5,6 +5,7 @@ from accounts.forms import LoginUserForm, RegistrationUserForm, UpdateUserForm, 
 from scraping.utils import get_object_or_null
 from scraping.models import Error
 from datetime import date
+import json
 
 User = get_user_model()
 
@@ -84,6 +85,10 @@ def delete_view(request):
 
 
 def contact_view(request):
+    """
+    for production server choose section 1 -------
+    for local server choose section 2 ========
+    """
     if request.user.is_authenticated:
         if request.method == 'POST':
             form = ContactForm(request.POST)
@@ -95,10 +100,32 @@ def contact_view(request):
                 today = date.today()
                 err = get_object_or_null(Error, datestamp=today)
                 if err:
-                    err.data['feedback'].extend(feedback)
+
+                    # 1 -----------------------------------------
+                    # for production server (db PostgreSQL)
+                    data = json.loads(err.data)
+                    data['feedback'].extend(feedback)
+                    err.data = json.dumps(data)
                     err.save()
+                    # --------------------------------------------
+
+                    # # 2 ============================================
+                    # # for local server (db SQLite):
+                    # err.data['feedback'].extend(feedback)
+                    # err.save()
+                    # #  ============================================
+
+
                 else:
-                    Error.objects.create(data={'errors': [], 'feedback': feedback,})
+                    # 1 -----------------------------------------
+                    # for production server (db PostgreSQL)
+                    Error.objects.create(data=json.dumps({'errors': [], 'feedback': feedback,}))
+                    # --------------------------------------------
+
+                    # # 2 ============================================
+                    # # for local server (db SQLite):
+                    # Error.objects.create(data={'errors': [], 'feedback': feedback,})
+                    # #  ============================================
                 messages.info(request, 'Данные отправлены нашей администрации')
                 return redirect(reverse('scraping:home'))
 

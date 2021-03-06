@@ -95,7 +95,10 @@ to = admin_user
 
 # ---------------------------------------------------------- Ищем ошибки скрапинга (START)
 if error:
+    # for production server:
     data = json.loads(error.data)
+    # for local server:
+    # data = error.data
     errors_data = data.get('errors', [])
 
     feedback_data = data.get('feedback', [])

@@ -1,7 +1,8 @@
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import User, AbstractUser
 from django.db.models import \
-    (Model, CharField, URLField, TextField, ForeignKey, DateField, IntegerField, DateTimeField, CASCADE)
+    (Model, CharField, URLField, TextField, ForeignKey, DateField,
+     JSONField, IntegerField, DateTimeField, CASCADE)
 from django.http import Http404
 
 from django.shortcuts import get_object_or_404
@@ -89,6 +90,7 @@ class Error(Model):
     timestamp = DateTimeField(auto_now_add=True)
     datestamp = DateField(auto_now_add=True)
     data = jsonfield.JSONField()# default=get_default_data_errors
+
 
 
     def __str__(self):

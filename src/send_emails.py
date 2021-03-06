@@ -1,6 +1,7 @@
 # ------------------------------------------------------- Запуск Django в не самого проекта
 import os, sys
 from datetime import date, timedelta
+import json
 import django
 
 proj = os.path.dirname(os.path.abspath('manage.py'))    # устанавливаем абсолютный путь
@@ -94,8 +95,10 @@ to = admin_user
 
 # ---------------------------------------------------------- Ищем ошибки скрапинга (START)
 if error:
-    errors_data = error.data.get('errors', [])
-    feedback_data = error.data.get('feedback', [])
+    data = json.loads(error.data)
+    errors_data = data.get('errors', [])
+
+    feedback_data = data.get('feedback', [])
     html_content += f'<h3>Ошибки скрапинга:</h3>'
     for i, err in enumerate(errors_data, start=1):
         html_content += f'<p>{i}) url: {err.get("url")}</p>'

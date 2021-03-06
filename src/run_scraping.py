@@ -143,12 +143,28 @@ errors_exp = [{
         'cause': 'HZ',
         'status_code': 200,}]
 
+
+"""
+for production server choose section 1 ------- 
+for local server choose section 2 ========
+"""
 # if errors_exp:
 if errors:
     err = get_object_or_null(Error, datestamp=date.today())
     if err:
+        # 1 -----------------------------------------
+        # for production server (db PostgreSQL)
+        data = json.loads(err.data)
+        data['errors'].extend(errors)
+        err.data = json.dumps(data)
+        err.save()
+        # --------------------------------------------
+
+        # 2 ============================================
+        # for local server (db SQLite):
         err.data['errors'].extend(errors)
         err.save()
+        #  ============================================
 
     else:
         err = Error(data={'errors': errors, 'feedback': [],}).save()

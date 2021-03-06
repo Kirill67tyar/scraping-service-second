@@ -16,6 +16,7 @@ django.setup()
 # ------------------------------------------------------- Запуск Django в не самого проекта
 import codecs
 import asyncio
+import json
 from datetime import date
 from django.shortcuts import get_object_or_404
 from django.db import DatabaseError
@@ -45,6 +46,11 @@ def get_settings():
 
 
 def get_url(_settings):
+    """
+                json.loads нужен только для postgresql в production сервере
+                на локальном нужно разкомментить строку без json.loads
+
+                """
     qs = Url.objects.all().values()
     url_dict = {(q['city_id'], q['language_id']): q['url_data'] for q in qs}
     urls = []
@@ -53,7 +59,11 @@ def get_url(_settings):
             tmp = {}
             tmp['city'] = pair[0]
             tmp['language'] = pair[-1]
-            tmp['url_data'] = url_dict.get(pair, {})
+            ## для production сервера:
+            tmp['url_data'] = json.loads(url_dict.get(pair, {}))
+            ## or
+            ## для локального сервера:
+            # tmp['url_data'] = url_dict.get(pair, {})
             urls.append(tmp)
     return urls
 

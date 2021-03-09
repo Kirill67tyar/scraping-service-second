@@ -15,7 +15,9 @@ def get_default_urls():
     return {'rabota':'',
             'work':'',
             'dou':'',
-            'djinni':'',}
+            'djinni':'',
+            'rabota_ru':'',
+            'super_job':'',}
 
 def get_default_data_errors():
     return {'errors': [],

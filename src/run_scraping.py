@@ -33,6 +33,8 @@ parsers = (
             (rabota, 'rabota'),
             (job_dou, 'dou'),
             (djinni, 'djinni'),
+            (rabota_ru, 'rabota_ru'),
+            (super_job, 'super_job'),
            )
 
 User = get_user_model()
@@ -59,11 +61,13 @@ def get_url(_settings):
             tmp = {}
             tmp['city'] = pair[0]
             tmp['language'] = pair[-1]
+            url_data = url_dict.get(pair, {})
+            if isinstance(url_data, str):
             ## для production сервера:
-            tmp['url_data'] = json.loads(url_dict.get(pair, {}))
-            ## or
+                tmp['url_data'] = json.loads(url_data)
+            else:
             ## для локального сервера:
-            # tmp['url_data'] = url_dict.get(pair, {})
+                tmp['url_data'] = url_data
             urls.append(tmp)
     return urls
 
@@ -154,16 +158,19 @@ if errors:
     if err:
         # 1 -----------------------------------------
         # for production server (db PostgreSQL)
-        data = json.loads(err.data)
-        data['errors'].extend(errors)
-        err.data = json.dumps(data)
-        err.save()
+        data = err.data
+        if isinstance(data, str):
+            data = json.loads(err.data)
+            data['errors'].extend(errors)
+            err.data = json.dumps(data)
+            err.save()
         # --------------------------------------------
 
         # # 2 ============================================
         # # for local server (db SQLite):
-        # err.data['errors'].extend(errors)
-        # err.save()
+        else:
+            err.data['errors'].extend(errors)
+            err.save()
         # #  ============================================
 
     else:

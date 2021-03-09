@@ -29,8 +29,12 @@
         <p class="lead">
             <small>{{obj.company}}</small>
         </p>
+        {% if obj.description %}
 
         <p class="card-text">{{obj.description|truncatewords:60}}</p>
+        {% else %}
+        <h3>--/--</h3>
+        {% endif %}
 
         <small><p class="card-text">{{obj.city.name}} | {{obj.language.name}} |
             {{obj.timestamp|date:"(l) d-m-Y"}}</p></small>

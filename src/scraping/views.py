@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 
 from scraping.models import Vacancy, Language, City
@@ -24,19 +24,32 @@ def experiments(request):
         'today': today,
         'day_and_time': day_and_time,
     }
-    print(f'\n\n**************************************\n'
-          f'request.user - {request.user}\n'
-          f'request.user.is_authenticated - {request.user.is_authenticated}\n'
-          f'request - {request}\n'
-          f'type(request) - {type(request)}\n'
-          f'type(request).mro() - {type(request).mro()}\n'
-          f'request.POST - {request.POST}\n'
-          f'request.GET - {request.GET}\n'
-          f'dir(request) - {dir(request)}'
-          f'\n**************************************\n\n',end='\n'*10)
-    for method in dir(request):
-        print(f'request.{method} -', getattr(request, method), end='\n'*3)
-    print('\n'*10)
+    # print(f'\n\n**************************************\n'
+    #       f'request.user - {request.user}\n'
+    #       f'request.user.is_authenticated - {request.user.is_authenticated}\n'
+    #       f'request - {request}\n'
+    #       f'type(request) - {type(request)}\n'
+    #       f'type(request).mro() - {type(request).mro()}\n'
+    #       f'request.POST - {request.POST}\n'
+    #       f'request.GET - {request.GET}\n'
+    #       f'dir(request) - {dir(request)}'
+    #       f'\n**************************************\n\n',end='\n'*10)
+    # for method in dir(request):
+    #     print(f'request.{method} -', getattr(request, method), end='\n'*3)
+    # print('\n'*10)
+    # print('\n'*4,'-'*10,
+    #       f'request.user - {request.user}',
+    #       *dir(request.user),
+    #       request.user.natural_key(),
+    #       '-'*10,
+    #       sep='\n', end='\n'*5)
+    print('\n' * 4, '-' * 10,
+          f'request - {request}',
+          *dir(request),
+          f'request.headers - {request.headers}',
+
+          '-' * 10,
+          sep='\n', end='\n' * 5)
 
     return render(request=request, template_name='some_template.html', context=_context)
 

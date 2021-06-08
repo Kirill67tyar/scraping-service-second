@@ -42,7 +42,8 @@ User = get_user_model()
 jobs, errors = [], []
 
 def get_settings():
-    qs = User.objects.filter(mailing=True).values()
+    qs = User.objects.filter(mailing=True).values()# здесь в values() можно добавить city_id и language_id
+    # а то он достает все поля User. А может и не добавлять, может так быстрее.
     settings_lst = set((q['city_id'], q['language_id']) for q in qs)
     return settings_lst
 

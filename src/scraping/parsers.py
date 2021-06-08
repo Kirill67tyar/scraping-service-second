@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup as BS
 import codecs
 from random import choice
 
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
+
 __all__ = ('work', 'rabota', 'job_dou', 'djinni', 'rabota_ru', 'super_job',)
 
 headers = [
@@ -16,7 +19,7 @@ headers = [
            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'}
            ]
 
-
+s = reverse
 
 def record_jobs(jobs, title, href, content, company, city, language):
     jobs.append(

@@ -114,20 +114,20 @@ url_list = get_url(_settings)
 python run_scraping.py
 """
 # =====================================================================    Неасинхронный способ выполнения
-for i in range(10):
-    for data in url_list:
-        for func, key in parsers:
-            if not isinstance(data['url_data'], str):
-                url = data['url_data'].get(key, None)
-                if url:
-                    # вот эта строчка - блокирующий вызов. Самый узкий проход нашего кода, бутылочное горлышко
-                    # весь код не может быть выполнен, пока не пройдут эти функции
-                    # поэтому мы здесь и используем асинхронный подход
-                    j, e = func(url, city=data['city'], language=data['language'])
-                    jobs.extend(j)
-                    errors.extend(e)
-            else:
-                print(data['url_data'], type(data['url_data']))
+# for i in range(10):
+for data in url_list:
+    for func, key in parsers:
+        if not isinstance(data['url_data'], str):
+            url = data['url_data'].get(key, None)
+            if url:
+                # вот эта строчка - блокирующий вызов. Самый узкий проход нашего кода, бутылочное горлышко
+                # весь код не может быть выполнен, пока не пройдут эти функции
+                # поэтому мы здесь и используем асинхронный подход
+                j, e = func(url, city=data['city'], language=data['language'])
+                jobs.extend(j)
+                errors.extend(e)
+        else:
+            print(data['url_data'], type(data['url_data']))
 # =====================================================================    Неасинхронный способ выполнения
 
 # print((time.time() - start) / 10)
